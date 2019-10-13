@@ -1,10 +1,20 @@
 package com.tasif.mongodbpratice.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Data;
+
 @Document(collection = "user")
-public class User {
+@Data
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String userId;
@@ -15,43 +25,7 @@ public class User {
 
 	private String mobileNumber;
 
-	public String getUserId() {
-		return userId;
-	}
+	@DBRef
+	private List<Vehicle> vehicles=new ArrayList<>();
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getUserEmail() {
-		return userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
-
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", userEmail=" + userEmail + ", mobileNumber="
-				+ mobileNumber + "]";
-	}
-
-	
 }

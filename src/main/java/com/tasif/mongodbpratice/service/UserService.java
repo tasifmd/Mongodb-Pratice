@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.tasif.mongodbpratice.dto.UserDto;
 import com.tasif.mongodbpratice.model.User;
+import com.tasif.mongodbpratice.model.Vehicle;
 import com.tasif.mongodbpratice.repository.UserRepository;
+import com.tasif.mongodbpratice.repository.VehicleRepository;
 
 @Service
 public class UserService {
@@ -18,6 +20,9 @@ public class UserService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	@Autowired
+	private VehicleRepository vehicleRepository;
 
 	public String addUser(UserDto userDto) {
 		User user = modelMapper.map(userDto, User.class);
@@ -43,6 +48,37 @@ public class UserService {
 		User user = userRepository.findById(userId).get();
 		userRepository.delete(user);
 		return "User is successfully deleted";
+	}
+
+	public User getUser(String userId) {
+		User user = userRepository.findById(userId).get();
+		return user;
+	}
+
+	public String addVehicleToUser(String userId, String vehicleId) {
+		User user = userRepository.findById(userId).get();
+		Vehicle vehicle = vehicleRepository.findById(vehicleId).get();
+		if (user.getVehicles().contains(vehicle))
+			return "Vehicle has already exist in this user";
+		user.getVehicles().add(vehicle);
+		userRepository.save(user);
+		return "Vehicle has been added to the user";
+	}
+
+	public String removeVehicleFromUser(String userId, String vehicleId) {
+		User user = userRepository.findById(userId).get();
+		Vehicle vehicle = vehicleRepository.findById(vehicleId).get();
+		if (!user.getVehicles().contains(vehicle))
+			return "No such vehicle exist in this user";
+		user.getVehicles().remove(vehicle);
+		userRepository.save(user);
+		return "Vehicle has been removed from the user";
+	}
+
+	public List<Vehicle> getVehicleOfUser(String userId) {
+		User user = userRepository.findById(userId).get();
+		List<Vehicle> vehicles = user.getVehicles();
+		return vehicles;
 	}
 
 }
